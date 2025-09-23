@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "48022929942",
+    "project_id": "fir-practice-8600b",
+    "storage_bucket": "fir-practice-8600b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48022929942:android:1f3203de97057552ad2b37",
+        "android_client_info": {
+          "package_name": "com.example.complete_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzTbAqPgJ57MH7OS4WRdBszUX2Hb3jDhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48022929942:android:449aa4e421479dd8ad2b37",
+        "android_client_info": {
+          "package_name": "com.firebase_app.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzTbAqPgJ57MH7OS4WRdBszUX2Hb3jDhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
