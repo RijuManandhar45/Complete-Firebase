@@ -1,3 +1,4 @@
+import 'package:complete_firebase/features/category/pages/popular_courses.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -219,12 +220,18 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
-                  Text(
-                    "SEE ALL >",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => PopularCourses()));
+                    },
+                    child: Text(
+                      "SEE ALL >",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue),
+                    ),
                   ),
                 ],
               ),

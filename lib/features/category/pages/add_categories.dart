@@ -1,4 +1,5 @@
 import 'package:complete_firebase/features/category/providers/categories_provider.dart';
+import 'package:complete_firebase/features/core/utils.dart';
 import 'package:complete_firebase/features/todo/provider/todo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +22,30 @@ class _AddCategoriesState extends State<AddCategories> {
   final TextEditingController _conclusion = TextEditingController();
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<CategoriesProvider>();
+      provider.addListener(() {
+        if (provider.statusUtils == StatusUtils.sucess) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("✅ Added Sucessfully")));
+        }
+        if (provider.statusUtils == StatusUtils.error) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("❌Invalid")));
+        }
+      });
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Add Categories"),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
