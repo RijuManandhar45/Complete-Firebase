@@ -1,5 +1,10 @@
 import 'package:complete_firebase/features/auth/pages/signup_page.dart';
+import 'package:complete_firebase/features/auth/provider/auth_provider.dart';
+import 'package:complete_firebase/features/category/pages/home_page.dart';
+import 'package:complete_firebase/features/core/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -11,6 +16,28 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<AuthProvider>();
+
+      provider.addListener(() {
+        if (provider.statusUtils == StatusUtils.sucess) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Signup Sucessful!"),
+          ));
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (_) => HomePage()), (route) => false);
+        }
+        if (provider.statusUtils == StatusUtils.error) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Invalid")));
+        }
+      });
+    });
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,154 +46,170 @@ class _SignInPageState extends State<SignInPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.network(
-                  "https://img.freepik.com/premium-vector/home-learning-logo-designs-concept-vector-home-education-logo-template-real-estate-symbol_841298-1523.jpg?semt=ais_incoming&w=740&q=80",
-                  height: 100,
-                  width: 100,
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Text(
-                "Let's Sign In.!",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "Login to Your Account to Continue your all Courses",
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Email",
-                    prefixIcon: Icon(Icons.email_outlined)),
-                controller: _emailController,
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Password",
-                    prefixIcon: Icon(Icons.lock_outline),
-                    suffixIcon: Icon(Icons.visibility_off)),
-                controller: _passwordController,
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
+          child: Consumer<AuthProvider>(builder: (_, provider, child) {
+            if (provider.statusUtils == StatusUtils.loading) {
+              return Center(
+                child: LoadingAnimationWidget.dotsTriangle(
+                    color: Colors.black, size: 50),
+              );
+            }
+
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.square_outlined, color: Colors.blue),
-                  Text("Remember Me"),
-                  Spacer(),
+                  Center(
+                    child: Image.network(
+                      "https://img.freepik.com/premium-vector/home-learning-logo-designs-concept-vector-home-education-logo-template-real-estate-symbol_841298-1523.jpg?semt=ais_incoming&w=740&q=80",
+                      height: 100,
+                      width: 100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
                   Text(
-                    "Forgot Password?",
-                    style: TextStyle(fontWeight: FontWeight.w500),
+                    "Let's Sign In.!",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 2,
-                    backgroundColor: Colors.lightBlueAccent,
-                    foregroundColor: Colors.white,
+                  SizedBox(
+                    height: 8,
                   ),
-                  onPressed: () {},
-                  child: Row(
+                  Text(
+                    "Login to Your Account to Continue your all Courses",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Email",
+                        prefixIcon: Icon(Icons.email_outlined)),
+                    controller: _emailController,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Password",
+                        prefixIcon: Icon(Icons.lock_outline),
+                        suffixIcon: Icon(Icons.visibility_off)),
+                    controller: _passwordController,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
                     children: [
-                      Text("Sign In"),
+                      Icon(Icons.check_box, color: Colors.blue),
+                      Text("Remember Me"),
                       Spacer(),
-                      Icon(
-                        Icons.arrow_circle_right,
-                        color: Colors.white,
-                        size: 40,
-                      )
+                      Text(
+                        "Forgot Password?",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
                     ],
-                  )),
-              SizedBox(
-                height: 16,
-              ),
-              Column(
-                children: [
-                  Text("Or Continue With"),
+                  ),
                   SizedBox(
                     height: 16,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 2,
+                        backgroundColor: Colors.lightBlueAccent,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        provider.signin(_emailController.text.trim(),
+                            _passwordController.text.trim());
+                      },
+                      child: Row(
+                        children: [
+                          Text("Sign In"),
+                          Spacer(),
+                          Icon(
+                            Icons.arrow_circle_right,
+                            color: Colors.white,
+                            size: 40,
+                          )
+                        ],
+                      )),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Column(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          color: const Color.fromARGB(255, 247, 247, 245),
-                          child: Image.network(
-                              "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png",
-                              fit: BoxFit.fill),
-                        ),
-                      ),
+                      Text("Or Continue With"),
                       SizedBox(
-                        width: 16,
+                        height: 16,
                       ),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          color: const Color.fromARGB(255, 247, 247, 245),
-                          child: Image.network(
-                            "https://gpng.net/wp-content/uploads/Apple-Logo-Icon-PNG.png",
-                            fit: BoxFit.cover,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              color: const Color.fromARGB(255, 247, 247, 245),
+                              child: Image.network(
+                                  "https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png",
+                                  fit: BoxFit.fill),
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              color: const Color.fromARGB(255, 247, 247, 245),
+                              child: Image.network(
+                                "https://gpng.net/wp-content/uploads/Apple-Logo-Icon-PNG.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Don't have an account?"),
                       SizedBox(
-                        width: 4,
+                        height: 16,
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => SignUpPage()));
-                        },
-                        child: Text(
-                          "SIGN Up",
-                          style: TextStyle(color: Colors.lightBlueAccent),
-                        ),
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Don't have an account?"),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => SignUpPage()));
+                            },
+                            child: Text(
+                              "SIGN Up",
+                              style: TextStyle(color: Colors.lightBlueAccent),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   )
                 ],
-              )
-            ],
-          ),
+              ),
+            );
+          }),
         ),
       ),
     );
