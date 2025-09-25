@@ -1,5 +1,12 @@
+import 'package:complete_firebase/features/auth/pages/signin_page.dart';
+import 'package:complete_firebase/features/auth/provider/auth_provider.dart';
+import 'package:complete_firebase/features/category/pages/add_categories.dart';
+import 'package:complete_firebase/features/category/pages/notification_page.dart';
 import 'package:complete_firebase/features/category/pages/popular_courses.dart';
+import 'package:complete_firebase/features/mentors/pages/profile_page.dart';
+import 'package:complete_firebase/features/mentors/provider/mentors_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,243 +17,414 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    Future.microtask(() {
+      fetchMentors();
+    });
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void fetchMentors() {
+    context.read<MentorsProvider>().fetchMentors();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+          child: Consumer<AuthProvider>(
+            builder: (_, authProvider, child) => SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                        "Hi, RIJU",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w600),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Hi, RIJU",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            "What would you like to learn today?",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey),
+                          ),
+                          Text(
+                            "Search below",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "What would you like to learn today?",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, color: Colors.grey),
-                      ),
-                      Text(
-                        "Search below",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, color: Colors.grey),
-                      ),
+                      Spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => NotificationPage()));
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.lightBlueAccent, width: 2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.lightBlue,
+                              ),
+                            )),
+                      )
                     ],
                   ),
-                  Spacer(),
-                  Container(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    child: Container(
+                      height: 60,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        border:
-                            Border.all(color: Colors.lightBlueAccent, width: 2),
-                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            blurRadius: 8,
+                          ),
+                        ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Icon(
-                          Icons.notifications_none_outlined,
-                          color: Colors.lightBlue,
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.search,
+                              size: 30,
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Search for..",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                    4), // space inside the border
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.lightBlueAccent),
+                                    color: Colors.lightBlueAccent),
+                                child: Icon(
+                                  Icons.tune,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      ))
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                child: Container(
-                  height: 60,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade200,
-                        blurRadius: 8,
+                      ),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      height: 160,
+                      width: 350,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                        Color.fromARGB(255, 43, 146, 166),
+                        Color.fromARGB(255, 10, 70, 181),
+                        Color.fromARGB(255, 20, 161, 166),
+                      ])),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "25% OFF*",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                            Text(
+                              "Today's Special",
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              "Get a Discount for Every \nCourse Order only Valid for \nToday.!",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Categories",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Spacer(),
+                      Text(
+                        "SEE ALL >",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          "3D Design",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 36.0),
+                          child: Text(
+                            "Arts & Humanities",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        Text(
+                          "Graphic Design",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          width: 36,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                _,
+                                MaterialPageRoute(
+                                    builder: (_) => AddCategories()));
+                          },
+                          child: Text(
+                            "Add Categories",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.teal),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Popular Courses",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => PopularCourses()));
+                        },
+                        child: Text(
+                          "SEE ALL >",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue),
+                        ),
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.search,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Search for..",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            padding:
-                                EdgeInsets.all(4), // space inside the border
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.lightBlueAccent),
-                                color: Colors.lightBlueAccent),
-                            child: Icon(
-                              Icons.tune,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                  SizedBox(
+                    height: 16,
                   ),
-                ),
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  height: 160,
-                  width: 350,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                    Color.fromARGB(255, 43, 146, 166),
-                    Color.fromARGB(255, 10, 70, 181),
-                    Color.fromARGB(255, 20, 161, 166),
-                  ])),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "25% OFF*",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        ),
-                        Text(
-                          "Today's Special",
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          "Get a Discount for Every \nCourse Order only Valid for \nToday.!",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Categories",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Spacer(),
-                  Text(
-                    "SEE ALL >",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Text(
-                      "3D Design",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 36.0),
-                      child: Text(
-                        "Arts & Humanities",
+                  Row(
+                    children: [
+                      Text(
+                        "3D Design",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    Text(
-                      "Graphic Design",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Popular Courses",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ],
                   ),
-                  Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => PopularCourses()));
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Top Mentors",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Spacer(),
+                      Text(
+                        "SEE ALL >",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Consumer<MentorsProvider>(
+                    builder: (_, mentorsProvider, child) {
+                      return SizedBox(
+                        height: 100,
+                        child: Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: mentorsProvider.mentorList.length,
+                            itemBuilder: (context, index) {
+                              final mentors = mentorsProvider.mentorList[index];
+                              return Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Container(
+                                          height: 70,
+                                          width: 80,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        mentors["mentorsName"],
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 16,
+                                  )
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      );
                     },
-                    child: Text(
-                      "SEE ALL >",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => ProfilePage()));
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 160,
+                        decoration: BoxDecoration(
+                            border: Border.all(), color: Colors.blueGrey),
+                        child: Center(
+                          child: Text(
+                            "Goto your Profile",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "3D Design",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  SizedBox(
+                    height: 24,
                   ),
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        authProvider.logout();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => SignInPage()));
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 160,
+                        decoration: BoxDecoration(
+                            border: Border.all(), color: Colors.grey),
+                        child: Center(
+                          child: Text(
+                            "Log Out",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
