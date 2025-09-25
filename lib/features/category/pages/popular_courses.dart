@@ -126,12 +126,22 @@ class _PopularCoursesState extends State<PopularCourses> {
                     final caterories = provider.categoriesList[index];
                     return Column(
                       children: [
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => CourseDetails()));
+                                    builder: (_) => CourseDetails(
+                                          category: caterories["categories"],
+                                          rating: caterories["rating"],
+                                          title: caterories["title"],
+                                          classes: caterories["classes"],
+                                          durationHours:
+                                              caterories["durationHours"],
+                                          price: caterories["price"],
+                                          tab: caterories["tab"],
+                                          conclusion: caterories["conclusion"],
+                                        )));
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),

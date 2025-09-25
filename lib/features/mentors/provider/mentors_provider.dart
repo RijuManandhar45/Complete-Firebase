@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:complete_firebase/features/core/utils.dart';
 import 'package:complete_firebase/features/mentors/pages/add_mentors.dart';
+import 'package:complete_firebase/features/mentors/pages/mentors.dart';
 import 'package:flutter/material.dart';
 
 class MentorsProvider with ChangeNotifier {
@@ -51,27 +52,11 @@ class MentorsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addMentors(
-    String mentorsName,
-    String age,
-    String email,
-    String phoneNumber,
-    String specialist,
-    String bio,
-  ) async {
+  Future<void> addMentors(Mentors mentors) async {
     handleLoading();
 
     try {
-      final data = {
-        "mentorsName": mentorsName,
-        "age": age,
-        "email": email,
-        "phoneNumber": phoneNumber,
-        "specialist": specialist,
-        "bio": bio,
-      };
-
-      await _firebaseStore.collection("addMentors").add(data);
+      await _firebaseStore.collection("addMentors").add(mentors.toJson());
       handleSucess();
     } catch (e) {
       errorMessage = e.toString();

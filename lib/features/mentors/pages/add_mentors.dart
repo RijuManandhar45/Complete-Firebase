@@ -1,3 +1,4 @@
+import 'package:complete_firebase/features/mentors/pages/mentors.dart';
 import 'package:complete_firebase/features/mentors/provider/mentors_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -148,15 +149,17 @@ class _AddMentorsState extends State<AddMentors> {
                             elevation: 2,
                             minimumSize: Size(double.infinity, 40)),
                         onPressed: () {
-                          String mentorsName = _mentorName.text.trim();
-                          String age = _age.text.trim();
-                          String email = _email.text.trim();
-                          String phoneNumber = _phoneNumber.text.trim();
-                          String specialist = _specailist.text.trim();
-                          String bio = _bio.text.trim();
+                          Mentors mentors = Mentors(
+                              mentorsName: _mentorName.text.trim(),
+                              age: int.tryParse(_age.text.trim()),
+                              email: _email.text.trim(),
+                              phoneNumber: int.tryParse(
+                                _phoneNumber.text.trim(),
+                              ),
+                              specialist: _specailist.text.trim(),
+                              bio: _bio.text.trim());
 
-                          provider.addMentors(mentorsName, age, email,
-                              phoneNumber, specialist, bio);
+                          provider.addMentors(mentors);
                         },
                         child: Text("Add"))
                   ],
