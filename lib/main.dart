@@ -3,6 +3,7 @@ import 'package:complete_firebase/features/category/pages/add_categories.dart';
 import 'package:complete_firebase/features/category/pages/course_details.dart';
 import 'package:complete_firebase/features/category/pages/popular_courses.dart';
 import 'package:complete_firebase/features/category/providers/categories_provider.dart';
+import 'package:complete_firebase/features/mentors/provider/mentors_provider.dart';
 import 'package:complete_firebase/firebase_options.dart';
 import 'package:complete_firebase/features/category/pages/home_page.dart';
 import 'package:complete_firebase/features/todo/provider/todo_provider.dart';
@@ -37,8 +38,14 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (_) => AuthProvider(),
           ),
+          ChangeNotifierProvider(
+            create: (_) => MentorsProvider(),
+          ),
         ],
         child: MaterialApp(
-            debugShowCheckedModeBanner: false, home: CourseDetails()));
+            debugShowCheckedModeBanner: false,
+            home: Consumer<AuthProvider>(
+                builder: (_, authProvider, child) =>
+                    authProvider.isLoggedIn ? HomePage() : SignInPage())));
   }
 }

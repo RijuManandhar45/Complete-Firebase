@@ -9,6 +9,9 @@ class CategoriesProvider with ChangeNotifier {
 
   String? errorMessage;
 
+  List<Map<String, dynamic>> _categoriesList = [];
+  List<Map<String, dynamic>> get categoriesList => _categoriesList;
+
   Future<void> addCategories(
       String category,
       String rating,
@@ -35,6 +38,23 @@ class CategoriesProvider with ChangeNotifier {
       print(data);
 
       await _firebaseStore.collection("addCategory").add(data);
+      _statusUtils = StatusUtils.sucess;
+      notifyListeners();
+    } catch (e) {
+      errorMessage = e.toString();
+      _statusUtils = StatusUtils.error;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchCourses() async {
+    _statusUtils = StatusUtils.loading;
+    notifyListeners();
+    try {
+      final snapshot = await _firebaseStore.collection("addCategory").get();
+      _categoriesList = snapshot.docs
+          .map((categories) => {"id": categories.id, ...categories.data()})
+          .toList();
       _statusUtils = StatusUtils.sucess;
       notifyListeners();
     } catch (e) {
