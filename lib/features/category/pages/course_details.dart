@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
 
 class CourseDetails extends StatefulWidget {
-  const CourseDetails({super.key});
+  String? category;
+  String? rating;
+  String? title;
+  String? classes;
+  String? durationHours;
+  String? price;
+  String? tab;
+  String? conclusion;
+
+  CourseDetails(
+      {this.category,
+      this.rating,
+      this.classes,
+      this.title,
+      this.durationHours,
+      this.price,
+      this.tab,
+      this.conclusion,
+      super.key});
 
   @override
   State<CourseDetails> createState() => _CourseDetailsState();
@@ -52,7 +70,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                         height: 30,
                                       ),
                                       Text(
-                                        "Graphic Design",
+                                        widget.category ?? "",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
